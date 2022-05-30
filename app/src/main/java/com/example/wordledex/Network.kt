@@ -1,13 +1,12 @@
 package com.example.wordledex
 
 import android.content.Context
-import android.util.Log
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.VolleyError
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
-import org.json.JSONArray
+import com.example.wordledex.database.Pokemon
 import org.json.JSONObject
 import java.util.*
 
@@ -39,6 +38,7 @@ class Network private constructor(context: Context) {
                     val pokemon = Pokemon()
                     pokemon.dex = number
                     pokemon.name = response.getString("name").toUpperCase(Locale.ROOT)
+                    if (pokemon.name == "MINIOR-RED-METEOR") pokemon.name = "MINIOR"
                     pokemon.height = response.getString("height").toFloat() / 10F
                     pokemon.weight = response.getString("weight").toFloat() / 10F
 
@@ -53,13 +53,13 @@ class Network private constructor(context: Context) {
                     }
 
                     val spritesObject = response.getJSONObject("sprites")
-                    pokemon.spriteNormal = spritesObject.getString("front_default")
-                    pokemon.spriteShiny = spritesObject.getString("front_shiny")
+                    pokemon.spriteNormalURL = spritesObject.getString("front_default")
+                    pokemon.spriteShinyURL = spritesObject.getString("front_shiny")
                     val artObject = spritesObject.getJSONObject("other").getJSONObject("home")
-                    pokemon.artNormal = artObject.getString("front_default")
-                    pokemon.artShiny = artObject.getString("front_shiny")
+                    pokemon.artNormalURL = artObject.getString("front_default")
+                    pokemon.artShinyURL = artObject.getString("front_shiny")
                     val iconObject = spritesObject.getJSONObject("versions").getJSONObject("generation-viii").getJSONObject("icons")
-                    pokemon.icon = iconObject.getString("front_default")
+                    pokemon.iconURL = iconObject.getString("front_default")
 
                     listener.onResponse(pokemon)
                 },
@@ -70,6 +70,7 @@ class Network private constructor(context: Context) {
         queue.add(request)
     }
 
+    //Gets the capture rate and description of a pokémon given its pokédex number
     fun getPokemonSpecies(listener: Response.Listener<Pokemon>, errorListener: Response.ErrorListener, pokemon: Pokemon) {
         val request = JsonObjectRequest(
                 Request.Method.GET,
@@ -94,4 +95,103 @@ class Network private constructor(context: Context) {
         )
         queue.add(request)
     }
+
+    /*
+    //Downloads the normal sprite of a given pokémon as a bitmap
+    fun getPokemonNormalSprite(listener: Response.Listener<Pokemon>, errorListener: Response.ErrorListener, pokemon: Pokemon){
+        val request = ImageRequest(
+                pokemon.spriteNormalURL,
+                {
+                    pokemon.spriteNormal = it
+                    listener.onResponse(pokemon)
+                },
+                0,
+                0,
+                ImageView.ScaleType.CENTER,
+                Bitmap.Config.ARGB_8888,
+                {
+                    errorListener.onErrorResponse(VolleyError("Error: Couldn't download ${pokemon.dex}'s normal sprite."))
+                }
+        )
+        queue.add(request)
+    }
+
+    //Downloads the shiny sprite of a given pokémon as a bitmap
+    fun getPokemonShinySprite(listener: Response.Listener<Pokemon>, errorListener: Response.ErrorListener, pokemon: Pokemon){
+        val request = ImageRequest(
+                pokemon.spriteShinyURL,
+                {
+                    pokemon.spriteShiny = it
+                    listener.onResponse(pokemon)
+                },
+                0,
+                0,
+                ImageView.ScaleType.CENTER,
+                Bitmap.Config.ARGB_8888,
+                {
+                    errorListener.onErrorResponse(VolleyError("Error: Couldn't download ${pokemon.dex}'s shiny sprite."))
+                }
+        )
+        queue.add(request)
+    }
+
+    //Downloads the normal art of a given pokémon as a bitmap
+    fun getPokemonNormalArt(listener: Response.Listener<Pokemon>, errorListener: Response.ErrorListener, pokemon: Pokemon){
+        if (pokemon.artNormalURL == "null") pokemon.artNormalURL = pokemon.spriteNormalURL
+        val request = ImageRequest(
+                pokemon.artNormalURL,
+                {
+                    pokemon.artNormal = it
+                    listener.onResponse(pokemon)
+                },
+                0,
+                0,
+                ImageView.ScaleType.CENTER,
+                Bitmap.Config.ARGB_8888,
+                {
+                    errorListener.onErrorResponse(VolleyError("Error: Couldn't download ${pokemon.dex}'s normal art."))
+                }
+        )
+        queue.add(request)
+    }
+
+    //Downloads the shiny art of a given pokémon as a bitmap
+    fun getPokemonShinyArt(listener: Response.Listener<Pokemon>, errorListener: Response.ErrorListener, pokemon: Pokemon){
+        if (pokemon.artShinyURL == "null") pokemon.artShinyURL = pokemon.spriteShinyURL
+        val request = ImageRequest(
+                pokemon.artShinyURL,
+                {
+                    pokemon.artShiny = it
+                    listener.onResponse(pokemon)
+                },
+                0,
+                0,
+                ImageView.ScaleType.CENTER,
+                Bitmap.Config.ARGB_8888,
+                {
+                    errorListener.onErrorResponse(VolleyError("Error: Couldn't download ${pokemon.dex}'s shiny art."))
+                }
+        )
+        queue.add(request)
+    }
+
+    //Downloads the icon sprite of a given pokémon as a bitmap
+    fun getPokemonIconSprite(listener: Response.Listener<Pokemon>, errorListener: Response.ErrorListener, pokemon: Pokemon){
+        val request = ImageRequest(
+                pokemon.iconURL,
+                {
+                    pokemon.icon = it
+                    listener.onResponse(pokemon)
+                },
+                0,
+                0,
+                ImageView.ScaleType.CENTER,
+                Bitmap.Config.ARGB_8888,
+                {
+                    errorListener.onErrorResponse(VolleyError("Error: Couldn't download ${pokemon.dex}'s icon sprite."))
+                }
+        )
+        queue.add(request)
+    }
+    */
 }
