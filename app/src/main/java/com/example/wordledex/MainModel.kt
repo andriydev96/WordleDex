@@ -12,7 +12,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class Model(context: Context) {
+class MainModel(context: Context) {
     private val network = Network.getInstance(context)
     private val database = WordleDexDatabase.getInstance(context).database
 

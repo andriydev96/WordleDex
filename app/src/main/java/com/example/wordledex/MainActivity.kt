@@ -17,7 +17,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         supportActionBar!!.hide()
 
-        presenter = MainPresenter(this, Model(this))
+        presenter = MainPresenter(this, MainModel(this))
         playButton = findViewById(R.id.buttonPlay)
 
         playButton.setOnClickListener {

@@ -9,7 +9,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.random.Random
 
-class MainPresenter(val view: MainActivity, val model: Model) {
+class MainPresenter(val view: MainActivity, val mainModel: MainModel) {
     init {
         loadGameData()
     }
@@ -21,8 +21,8 @@ class MainPresenter(val view: MainActivity, val model: Model) {
     fun loadGameData(){
         GlobalScope.launch(Dispatchers.Main) {
             withContext(Dispatchers.IO){
-                model.loadPokemonData({loadPokemonData(it)},{})
-                model.loadPlayerData({loadPlayerData(it)},{loadPlayerData(playerData)})
+                mainModel.loadPokemonData({loadPokemonData(it)},{})
+                mainModel.loadPlayerData({loadPlayerData(it)},{loadPlayerData(playerData)})
             }
         }
         playerData = PlayerData()
@@ -31,13 +31,13 @@ class MainPresenter(val view: MainActivity, val model: Model) {
     //Gets an incomplete list of information about each pokémon
     fun getPokemon(){
         for (i in 1..898)
-            model.getPokemon({addPokemonToList(it)}, {Log.d("ERROR POKEMON", "$i")}, i)
+            mainModel.getPokemon({addPokemonToList(it)}, {Log.d("ERROR POKEMON", "$i")}, i)
     }
 
     //Gets the remaining info of each pokémon
     fun getPokemonSpeciesInfo(){
         for (i in 1..898)
-            model.getPokemonSpecies({updatePokemonSpeciesData(it)},{Log.d("ERROR SPECIES INFO", "$i")}, pokemonList[i-1])
+            mainModel.getPokemonSpecies({updatePokemonSpeciesData(it)},{Log.d("ERROR SPECIES INFO", "$i")}, pokemonList[i-1])
     }
 
     fun loadPokemonData(loadedData : ArrayList<Pokemon>){
@@ -56,7 +56,7 @@ class MainPresenter(val view: MainActivity, val model: Model) {
             Log.d("APP-ACTION", "Successfully got player data from local database. $playerData")
         } else {
             playerData = PlayerData()
-            model.savePlayerData(playerData!!)
+            mainModel.savePlayerData(playerData!!)
             Log.d("APP-ACTION", "No player data found. Initializing data...")
         }
     }
@@ -74,7 +74,7 @@ class MainPresenter(val view: MainActivity, val model: Model) {
     fun updatePokemonSpeciesData(pokemon: Pokemon) {
         pokemonList[pokemon.dex-1] = pokemon
         if (pokemon.dex == 898)
-            model.savePokemonData(pokemonList)
+            mainModel.savePokemonData(pokemonList)
             //getPokemonNormalSprite()
     }
 
