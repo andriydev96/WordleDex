@@ -26,6 +26,16 @@ class MainModel(context: Context) {
         }
     }
 
+    fun loadMissingPokemonData(listener: Response.Listener<ArrayList<Pokemon>>, errorListener: Response.ErrorListener) {
+        GlobalScope.launch(Dispatchers.Main) {
+            val pokemonList = withContext(Dispatchers.IO){
+                Log.d("APP-ACTION", "Loading missing pokémon data from the DB...")
+                database.wordleDexDao().loadMissingPokemonData() as ArrayList<Pokemon>
+            }
+            listener.onResponse(pokemonList)
+        }
+    }
+
     fun loadPlayerData(listener: Response.Listener<PlayerData>, errorListener: Response.ErrorListener) {
         GlobalScope.launch(Dispatchers.Main) {
             val playerData = withContext(Dispatchers.IO){

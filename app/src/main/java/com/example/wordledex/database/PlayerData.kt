@@ -14,9 +14,12 @@ data class PlayerData(
         //STATS
         var gamesPlayed : Int = 0,
         var gamesWon : Int = 0,
-        var gamesLost : Int = 0
+        var perfectWins : Int = 0,
+        var gamesLost : Int = 0,
+        var dexEntries : Int = 0
 ) : Parcelable {
         constructor(parcel: Parcel) : this(
+                parcel.readInt(),
                 parcel.readInt(),
                 parcel.readInt(),
                 parcel.readInt(),
@@ -27,6 +30,7 @@ data class PlayerData(
                 parcel.writeInt(playerId)
                 parcel.writeInt(gamesPlayed)
                 parcel.writeInt(gamesWon)
+                parcel.writeInt(perfectWins)
                 parcel.writeInt(gamesLost)
         }
 

@@ -39,6 +39,10 @@ class Network private constructor(context: Context) {
                     pokemon.dex = number
                     pokemon.name = response.getString("name").toUpperCase(Locale.ROOT)
                     if (pokemon.name == "MINIOR-RED-METEOR") pokemon.name = "MINIOR"
+                    else if (pokemon.name == "WORMADAM-PLANT") pokemon.name = "WORMADAM"
+                    else if (pokemon.name == "LYCANROC-MIDDAY") pokemon.name = "LYCANROC"
+                    else if (pokemon.name == "GIRATINA-ALTERED") pokemon.name = "GIRATINA"
+                    else if (pokemon.name == "MORPEKO-FULL-BELLY") pokemon.name = "MORPEKO"
                     pokemon.height = response.getString("height").toFloat() / 10F
                     pokemon.weight = response.getString("weight").toFloat() / 10F
 

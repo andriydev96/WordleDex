@@ -9,20 +9,22 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.random.Random
 
-class MainPresenter(val view: MainActivity, val mainModel: MainModel) {
+class MainPresenter(val view: MainActivity, val model: MainModel) {
     init {
         loadGameData()
     }
 
     var pokemonList = ArrayList<Pokemon>()
+    var missingPokemonList =  ArrayList<Pokemon>()
     var playerData : PlayerData? = null
 
     //Loads all of the game data from the database or downloads it and sets it up if it's the first time playing
     fun loadGameData(){
         GlobalScope.launch(Dispatchers.Main) {
             withContext(Dispatchers.IO){
-                mainModel.loadPokemonData({loadPokemonData(it)},{})
-                mainModel.loadPlayerData({loadPlayerData(it)},{loadPlayerData(playerData)})
+                model.loadPokemonData({loadPokemonData(it)},{})
+                model.loadMissingPokemonData({loadMissingPokemonData(it)},{})
+                model.loadPlayerData({loadPlayerData(it)},{loadPlayerData(playerData)})
             }
         }
         playerData = PlayerData()
@@ -31,13 +33,13 @@ class MainPresenter(val view: MainActivity, val mainModel: MainModel) {
     //Gets an incomplete list of information about each pokémon
     fun getPokemon(){
         for (i in 1..898)
-            mainModel.getPokemon({addPokemonToList(it)}, {Log.d("ERROR POKEMON", "$i")}, i)
+            model.getPokemon({addPokemonToList(it)}, {Log.d("ERROR POKEMON", "$i")}, i)
     }
 
     //Gets the remaining info of each pokémon
     fun getPokemonSpeciesInfo(){
         for (i in 1..898)
-            mainModel.getPokemonSpecies({updatePokemonSpeciesData(it)},{Log.d("ERROR SPECIES INFO", "$i")}, pokemonList[i-1])
+            model.getPokemonSpecies({updatePokemonSpeciesData(it)},{Log.d("ERROR SPECIES INFO", "$i")}, pokemonList[i-1])
     }
 
     fun loadPokemonData(loadedData : ArrayList<Pokemon>){
@@ -50,13 +52,22 @@ class MainPresenter(val view: MainActivity, val mainModel: MainModel) {
         }
     }
 
+    fun loadMissingPokemonData(loadedData : ArrayList<Pokemon>){
+        missingPokemonList = loadedData
+        if (missingPokemonList.isNotEmpty()) {
+            Log.d("APP-ACTION", "Successfully got missing pokémon list from local database. $missingPokemonList")
+        } else {
+            Log.d("APP-ACTION", "No missing pokémon have been found!")
+        }
+    }
+
     fun loadPlayerData(loadedData : PlayerData?){
         playerData = loadedData
         if (playerData != null) {
             Log.d("APP-ACTION", "Successfully got player data from local database. $playerData")
         } else {
             playerData = PlayerData()
-            mainModel.savePlayerData(playerData!!)
+            model.savePlayerData(playerData!!)
             Log.d("APP-ACTION", "No player data found. Initializing data...")
         }
     }
@@ -74,12 +85,20 @@ class MainPresenter(val view: MainActivity, val mainModel: MainModel) {
     fun updatePokemonSpeciesData(pokemon: Pokemon) {
         pokemonList[pokemon.dex-1] = pokemon
         if (pokemon.dex == 898)
-            mainModel.savePokemonData(pokemonList)
+            model.savePokemonData(pokemonList)
             //getPokemonNormalSprite()
     }
 
+    //Launches game activity -> 50% chances to find a random pokémon and 50% chances to find a pokémon the player does not have yet
     fun launchGameActivity(){
-        view.launchGameActivity(pokemonList[Random.nextInt(0,897)], playerData!!)
+        if (missingPokemonList.isEmpty()){
+            view.launchGameActivity(pokemonList[Random.nextInt(0,897)], playerData!!)
+        } else {
+            when (Random.nextInt(0,1)){
+                0 -> view.launchGameActivity(pokemonList[Random.nextInt(0,897)], playerData!!)
+                else -> view.launchGameActivity(missingPokemonList[Random.nextInt(0,missingPokemonList.size-1)], playerData!!)
+            }
+        }
     }
 
     /*
