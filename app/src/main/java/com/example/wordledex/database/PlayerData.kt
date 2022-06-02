@@ -16,14 +16,18 @@ data class PlayerData(
         var gamesWon : Int = 0,
         var perfectWins : Int = 0,
         var gamesLost : Int = 0,
-        var dexEntries : Int = 0
+        var dexEntries : Int = 0,
+        var shinyDexEntries : Int = 0
 ) : Parcelable {
         constructor(parcel: Parcel) : this(
                 parcel.readInt(),
                 parcel.readInt(),
                 parcel.readInt(),
                 parcel.readInt(),
-                parcel.readInt()) {
+                parcel.readInt(),
+                parcel.readInt(),
+                parcel.readInt()
+        ) {
         }
 
         override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -32,6 +36,8 @@ data class PlayerData(
                 parcel.writeInt(gamesWon)
                 parcel.writeInt(perfectWins)
                 parcel.writeInt(gamesLost)
+                parcel.writeInt(dexEntries)
+                parcel.writeInt(shinyDexEntries)
         }
 
         override fun describeContents(): Int {

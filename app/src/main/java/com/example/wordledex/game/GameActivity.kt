@@ -16,8 +16,8 @@ import com.squareup.picasso.Picasso
 
 class GameActivity : AppCompatActivity() {
     lateinit var pokemon: Pokemon
+    var isShiny = false
     lateinit var playerData: PlayerData
-
     lateinit var presenter: GamePresenter
 
     lateinit var silhouetteImageView: ImageView
@@ -133,10 +133,19 @@ class GameActivity : AppCompatActivity() {
         textViewGeneration = findViewById(R.id.textViewGeneration)
         lifeBar = findViewById(R.id.lifeBar)
 
-        Picasso.get().load(pokemon.artNormalURL).into(silhouetteImageView)
+        if (pokemon.caught) presenter.rollShiny()
+        loadPokemonImage(silhouetteImageView)
         clearButtonText()
 
         Log.d("APP-ACTION", "$pokemon")
+    }
+
+    fun loadPokemonImage(view: ImageView){
+        if (!isShiny){
+            Picasso.get().load(pokemon.artNormalURL).into(view)
+        } else {
+            Picasso.get().load(pokemon.artShinyURL).into(view)
+        }
     }
 
     fun clearButtonText(){
@@ -166,7 +175,12 @@ class GameActivity : AppCompatActivity() {
     fun gameOver(life : Int, pokemon: Pokemon){
         val builder = AlertDialog.Builder(this)
         val view = layoutInflater.inflate(R.layout.game_over_dialog, null)
-        Picasso.get().load(pokemon.artNormalURL).into(view.findViewById<ImageView>(R.id.imageViewGO))
+        if (!isShiny)
+            Picasso.get().load(pokemon.artNormalURL).into(view.findViewById<ImageView>(R.id.imageViewGO))
+        else {
+            Picasso.get().load(pokemon.artShinyURL).into(view.findViewById<ImageView>(R.id.imageViewGO))
+            view.findViewById<ImageView>(R.id.imageViewBackgroundGO).setImageResource(R.drawable.light_effect_shiny)
+        }
 
         if (life != 0){
             view.findViewById<TextView>(R.id.textViewTitleGO).text = "CONGRATULATIONS!"

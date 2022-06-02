@@ -25,7 +25,8 @@ data class Pokemon(
         var iconURL: String? = "???",
 
         var caught: Boolean = false,
-        var shinyCaught:  Boolean = false
+        var shinyCaught:  Boolean = false,
+        var numCaught: Int = 0
 
         /*var spriteNormal: Bitmap? = null,
         var spriteShiny: Bitmap? = null,
@@ -47,21 +48,23 @@ data class Pokemon(
             }
 
     constructor(parcel: Parcel) : this(
-            parcel.readInt(),
-            parcel.readString(),
-            parcel.readFloat(),
-            parcel.readFloat(),
-            parcel.readString(),
-            parcel.readString(),
-            parcel.readInt(),
-            parcel.readString(),
-            parcel.readString(),
-            parcel.readString(),
-            parcel.readString(),
-            parcel.readString(),
-            parcel.readString(),
-            parcel.readByte() != 0.toByte(),
-            parcel.readByte() != 0.toByte()) {
+        parcel.readInt(),
+        parcel.readString(),
+        parcel.readFloat(),
+        parcel.readFloat(),
+        parcel.readString(),
+        parcel.readString(),
+        parcel.readInt(),
+        parcel.readString(),
+        parcel.readString(),
+        parcel.readString(),
+        parcel.readString(),
+        parcel.readString(),
+        parcel.readString(),
+        parcel.readByte() != 0.toByte(),
+        parcel.readByte() != 0.toByte(),
+        parcel.readInt()
+    ) {
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -80,6 +83,7 @@ data class Pokemon(
         parcel.writeString(iconURL)
         parcel.writeByte(if (caught) 1 else 0)
         parcel.writeByte(if (shinyCaught) 1 else 0)
+        parcel.writeInt(numCaught)
     }
 
     override fun describeContents(): Int {
@@ -95,4 +99,5 @@ data class Pokemon(
             return arrayOfNulls(size)
         }
     }
+
 }

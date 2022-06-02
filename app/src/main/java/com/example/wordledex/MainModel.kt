@@ -71,26 +71,4 @@ class MainModel(context: Context) {
     fun getPokemonSpecies(listener: Response.Listener<Pokemon>, errorListener: Response.ErrorListener, pokemon : Pokemon){
         network.getPokemonSpecies({ listener.onResponse(it) },{errorListener.onErrorResponse(it)}, pokemon)
     }
-
-    /*
-    fun getPokemonNormalSprite(listener: Response.Listener<Pokemon>, errorListener: Response.ErrorListener, pokemon : Pokemon){
-        network.getPokemonNormalSprite({ listener.onResponse(it) },{errorListener.onErrorResponse(it)}, pokemon)
-    }
-
-    fun getPokemonShinySprite(listener: Response.Listener<Pokemon>, errorListener: Response.ErrorListener, pokemon : Pokemon){
-        network.getPokemonShinySprite({ listener.onResponse(it) },{errorListener.onErrorResponse(it)}, pokemon)
-    }
-
-    fun getPokemonNormalArt(listener: Response.Listener<Pokemon>, errorListener: Response.ErrorListener, pokemon : Pokemon){
-        network.getPokemonNormalArt({ listener.onResponse(it) },{errorListener.onErrorResponse(it)}, pokemon)
-    }
-
-    fun getPokemonShinyArt(listener: Response.Listener<Pokemon>, errorListener: Response.ErrorListener, pokemon : Pokemon){
-        network.getPokemonShinyArt({ listener.onResponse(it) },{errorListener.onErrorResponse(it)}, pokemon)
-    }
-
-    fun getPokemonIconSprite(listener: Response.Listener<Pokemon>, errorListener: Response.ErrorListener, pokemon : Pokemon){
-        network.getPokemonIconSprite({ listener.onResponse(it) },{errorListener.onErrorResponse(it)}, pokemon)
-    }
-    */
 }

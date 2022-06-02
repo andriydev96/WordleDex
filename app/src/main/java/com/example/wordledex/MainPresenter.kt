@@ -7,6 +7,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlin.math.floor
 import kotlin.random.Random
 
 class MainPresenter(val view: MainActivity, val model: MainModel) {
@@ -22,9 +23,13 @@ class MainPresenter(val view: MainActivity, val model: MainModel) {
     fun loadGameData(){
         GlobalScope.launch(Dispatchers.Main) {
             withContext(Dispatchers.IO){
-                model.loadPokemonData({loadPokemonData(it)},{})
-                model.loadMissingPokemonData({loadMissingPokemonData(it)},{})
-                model.loadPlayerData({loadPlayerData(it)},{loadPlayerData(playerData)})
+                model.loadPokemonData({
+                    loadPokemonData(it)
+                    if (it.isNotEmpty()) view.updateProgressScreen("Loading...", 898)}, {})
+                model.loadMissingPokemonData({
+                    loadMissingPokemonData(it)
+                    if (it.isNotEmpty()) view.updateProgressScreen("Loading...", 898)},{})
+                model.loadPlayerData({ loadPlayerData(it) },{loadPlayerData(playerData)})
             }
         }
         playerData = PlayerData()
@@ -33,13 +38,19 @@ class MainPresenter(val view: MainActivity, val model: MainModel) {
     //Gets an incomplete list of information about each pokémon
     fun getPokemon(){
         for (i in 1..898)
-            model.getPokemon({addPokemonToList(it)}, {Log.d("ERROR POKEMON", "$i")}, i)
+            model.getPokemon({
+                addPokemonToList(it)
+                view.updateProgressScreen("Downloading pokémon data ${floor((i/2).toDouble()).toInt()}/898", 1)},
+                {Log.d("ERROR POKEMON", "$i")}, i)
     }
 
     //Gets the remaining info of each pokémon
     fun getPokemonSpeciesInfo(){
         for (i in 1..898)
-            model.getPokemonSpecies({updatePokemonSpeciesData(it)},{Log.d("ERROR SPECIES INFO", "$i")}, pokemonList[i-1])
+            model.getPokemonSpecies({
+                updatePokemonSpeciesData(it)
+                view.updateProgressScreen("Downloading pokémon data ${898/2 + floor((i/2).toDouble()).toInt()}/898", 1) },
+                {Log.d("ERROR SPECIES INFO", "$i")}, pokemonList[i-1])
     }
 
     fun loadPokemonData(loadedData : ArrayList<Pokemon>){
@@ -89,7 +100,7 @@ class MainPresenter(val view: MainActivity, val model: MainModel) {
             //getPokemonNormalSprite()
     }
 
-    //Launches game activity -> 50% chances to find a random pokémon and 50% chances to find a pokémon the player does not have yet
+    //Launches game activity -> 50% chances to find a random pokémon and 50% chances to find a pokémon the player does not have yet.
     fun launchGameActivity(){
         if (missingPokemonList.isEmpty()){
             view.launchGameActivity(pokemonList[Random.nextInt(0,897)], playerData!!)
@@ -100,76 +111,5 @@ class MainPresenter(val view: MainActivity, val model: MainModel) {
             }
         }
     }
-
-    /*
-    //Gets the normal sprite bitmap of each pokémon
-    fun getPokemonNormalSprite(){
-        for (i in 1..898)
-            model.getPokemonNormalSprite({updatePokemonNormalSprite(it)},{Log.d("ERROR NORMAL SPRITE", "$i")}, pokemonList[i-1])
-    }
-
-    //Gets the shiny sprite bitmap of each pokémon
-    fun getPokemonShinySprite(){
-        for (i in 1..898)
-            model.getPokemonShinySprite({updatePokemonShinySprite(it)},{Log.d("ERROR SHINY SPRITE", "$i")}, pokemonList[i-1])
-    }
-
-    //Gets the normal art bitmap of each pokémon
-    fun getPokemonNormalArt(){
-        for (i in 1..898)
-            model.getPokemonNormalArt({updatePokemonNormalArt(it)},{Log.d("ERROR NORMAL ART", "$i")}, pokemonList[i-1])
-    }
-
-    //Gets the shiny art bitmap of each pokémon
-    fun getPokemonShinyArt(){
-        for (i in 1..898)
-            model.getPokemonShinyArt({updatePokemonShinyArt(it)},{Log.d("ERROR SHINY ART", "$i")}, pokemonList[i-1])
-    }
-
-    //Gets the icon sprite bitmap of each pokémon
-    fun getPokemonIconSprite(){
-        for (i in 1..898)
-            model.getPokemonIconSprite({updatePokemonIconSprite(it)},{Log.d("ERROR ICON", "$i")}, pokemonList[i-1])
-    }
-    */
-
-    /*
-    //Updates the corresponding Pokemon object of the pokemonList with its normal sprite bitmap
-    fun updatePokemonNormalSprite(pokemon: Pokemon) {
-        pokemonList[pokemon.dex-1] = pokemon
-        if (pokemon.dex == 898) {
-            getPokemonShinySprite()
-        }
-    }
-
-    //Updates the corresponding Pokemon object of the pokemonList with its shiny sprite bitmap
-    fun updatePokemonShinySprite(pokemon: Pokemon) {
-        pokemonList[pokemon.dex-1] = pokemon
-        if (pokemon.dex == 898) {
-            getPokemonNormalArt()
-        }
-    }
-
-    //Updates the corresponding Pokemon object of the pokemonList with its normal art bitmap
-    fun updatePokemonNormalArt(pokemon: Pokemon) {
-        pokemonList[pokemon.dex-1] = pokemon
-        if (pokemon.dex == 898) {
-            getPokemonShinyArt()
-        }
-    }
-
-    //Updates the corresponding Pokemon object of the pokemonList with its shiny art bitmap
-    fun updatePokemonShinyArt(pokemon: Pokemon) {
-        pokemonList[pokemon.dex-1] = pokemon
-        if (pokemon.dex == 898) {
-            getPokemonIconSprite()
-        }
-    }
-
-    //Updates the corresponding Pokemon object of the pokemonList with its icon sprite bitmap
-    fun updatePokemonIconSprite(pokemon: Pokemon) {
-        pokemonList[pokemon.dex-1] = pokemon
-    }
-    */
 }
 

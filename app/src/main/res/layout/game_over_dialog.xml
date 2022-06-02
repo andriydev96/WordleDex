@@ -46,6 +46,19 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
+        android:id="@+id/imageViewBackgroundGO"
+        android:layout_width="175dp"
+        android:layout_height="175dp"
+        android:layout_marginTop="8dp"
+        android:alpha="0.8"
+        android:scaleX="2.5"
+        android:scaleY="1.5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewTitleGO"
+        app:srcCompat="@drawable/light_effect" />
+
+    <ImageView
         android:id="@+id/imageViewGO"
         android:layout_width="175dp"
         android:layout_height="175dp"

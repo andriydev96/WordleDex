@@ -9,6 +9,7 @@ import android.widget.ImageView
 import androidx.core.graphics.drawable.DrawableCompat
 import com.example.wordledex.R
 import com.example.wordledex.database.Pokemon
+import kotlin.random.Random.Default.nextInt
 
 class GamePresenter(private val view: GameActivity, val model: GameModel) {
     var updatedKeys = ""
@@ -32,7 +33,12 @@ class GamePresenter(private val view: GameActivity, val model: GameModel) {
             view.playerData.gamesWon += 1
             if (model.life == 5) view.playerData.perfectWins += 1
             if (!pokemon.caught) view.playerData.dexEntries += 1
+            if (view.isShiny) {
+                pokemon.shinyCaught = true
+                view.playerData.shinyDexEntries += 1
+            }
             pokemon.caught = true
+            pokemon.numCaught += 1
             model.savePokemonData(pokemon)
             model.savePlayerData(view.playerData)
             view.gameOver(model.life, pokemon)
@@ -115,7 +121,6 @@ class GamePresenter(private val view: GameActivity, val model: GameModel) {
     }
 
     fun updateKeyBoard(pokemon: Pokemon){
-
         for (i in 1..model.currentGuess.length){
             if (model.currentGuess.substring(i - 1, i) == pokemon.name!!.substring(i - 1, i) && !updatedKeys.contains(model.currentGuess.substring(i - 1, i))){
                 updateKey(model.currentGuess.substring(i - 1, i), Color.parseColor("#FF409A2F"))
@@ -165,6 +170,18 @@ class GamePresenter(private val view: GameActivity, val model: GameModel) {
             keyView.setBackgroundColor(color)
         } else {
             keyView.setBackgroundColor(color)
+        }
+    }
+
+    //Decides if the encountered pokémon is shiny. The more times the player has captured this species, the more chances it has to be shiny. MAX 50% ODDS
+    fun rollShiny(){
+        val diceRoll = nextInt(0, 20)
+        val chances = if (view.pokemon.numCaught <= 10) view.pokemon.numCaught else 10
+        if (chances >= diceRoll){
+            view.isShiny = true
+            Log.d("APP-ACTION", "SHINY POKÉMON $chances/$diceRoll")
+        } else {
+            Log.d("APP-ACTION", "REGULAR POKÉMON $chances/$diceRoll")
         }
     }
 }
