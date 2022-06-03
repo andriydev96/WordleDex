@@ -1,5 +1,6 @@
 package com.example.wordledex.achievements
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,11 +31,15 @@ class AchievementAdapter(val achievementList: ArrayList<Achievement>): RecyclerV
             if (achievement.got){
                 icon.setImageResource(achievement.icon)
                 name.text = achievement.name
+                name.setTextColor(Color.parseColor("#FFFFFF"))
                 description.text = achievement.description
+                description.setTextColor(Color.parseColor("#FFFFFF"))
             } else {
                 icon.setImageResource(R.drawable.achievement_locked)
                 name.text = "???"
+                name.setTextColor(Color.parseColor("#AAFFFFFF"))
                 description.text = achievement.description
+                description.setTextColor(Color.parseColor("#AAFFFFFF"))
             }
         }
     }

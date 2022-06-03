@@ -89,6 +89,9 @@ class Network private constructor(context: Context) {
                     val iconObject = spritesObject.getJSONObject("versions").getJSONObject("generation-viii").getJSONObject("icons")
                     pokemon.iconURL = iconObject.getString("front_default")
 
+                    if (pokemon.artNormalURL == "null") pokemon.artNormalURL = pokemon.spriteNormalURL
+                    if (pokemon.artShinyURL == "null") pokemon.artShinyURL = pokemon.spriteShinyURL
+
                     listener.onResponse(pokemon)
                 },
                 {

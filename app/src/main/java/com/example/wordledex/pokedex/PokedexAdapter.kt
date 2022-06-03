@@ -41,6 +41,7 @@ class PokedexAdapter(val ownedPokemonList : ArrayList<Pokemon>):RecyclerView.Ada
             val numberTextView = view.findViewById<TextView>(R.id.textViewDex)
             numberTextView.text = "#${pokemon.dex.toString().padStart(3, '0')}"
             if (pokemon.shinyCaught) numberTextView.setTextColor(Color.parseColor("#FFD700"))
+            else numberTextView.setTextColor(Color.parseColor("#FFFFFF"))
             Picasso.get().load(pokemon.spriteNormalURL).into(view.findViewById<ImageView>(R.id.imageViewDex), object: Callback {
                 override fun onSuccess() {}
                 override fun onError(e: Exception?) {
