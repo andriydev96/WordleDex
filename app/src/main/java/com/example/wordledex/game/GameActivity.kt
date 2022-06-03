@@ -137,6 +137,7 @@ class GameActivity : AppCompatActivity() {
 
         if (pokemon.caught) presenter.rollShiny()
         loadPokemonImage(silhouetteImageView)
+        presenter.toggleGuessButton(false)
         clearButtonText()
 
         Log.d("APP-ACTION", "$pokemon")

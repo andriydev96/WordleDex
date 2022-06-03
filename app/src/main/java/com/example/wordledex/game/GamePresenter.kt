@@ -72,7 +72,7 @@ class GamePresenter(private val view: GameActivity, val model: GameModel) {
     }
 
     //Enables or disables the guess button
-    private fun toggleGuessButton(enabled : Boolean){
+    fun toggleGuessButton(enabled : Boolean){
         view.buttonGuess.isClickable = enabled
         if (enabled) {
             var buttonDrawable = view.buttonGuess.background

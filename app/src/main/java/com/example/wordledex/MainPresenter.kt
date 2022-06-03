@@ -96,17 +96,16 @@ class MainPresenter(private val view: MainActivity, private val model: MainModel
         pokemonList[pokemon.dex-1] = pokemon
         if (pokemon.dex == 898)
             model.savePokemonData(pokemonList)
-            //getPokemonNormalSprite()
     }
 
     //Launches game activity -> 50% chances to find a random pokémon and 50% chances to find a pokémon the player does not have yet.
     fun launchGameActivity(){
         if (missingPokemonList.isEmpty()){
-            view.launchGameActivity(pokemonList[Random.nextInt(0,897)], playerData!!)
+            view.launchGameActivity(pokemonList[Random.nextInt(0,898)], playerData!!)
         } else {
-            when (Random.nextInt(0,1)){
+            when (Random.nextInt(0,2)){
                 0 -> view.launchGameActivity(pokemonList[Random.nextInt(0,897)], playerData!!)
-                else -> view.launchGameActivity(missingPokemonList[Random.nextInt(0,missingPokemonList.size-1)], playerData!!)
+                1 -> view.launchGameActivity(missingPokemonList[Random.nextInt(0,missingPokemonList.size)], playerData!!)
             }
         }
     }
