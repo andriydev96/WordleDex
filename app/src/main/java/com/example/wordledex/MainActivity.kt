@@ -1,16 +1,12 @@
 package com.example.wordledex
 
 import android.content.Intent
-import android.content.IntentSender
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View.GONE
 import android.view.View.VISIBLE
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.ProgressBar
-import android.widget.TextView
+import android.widget.*
+import com.example.wordledex.achievements.AchievementsActivity
 import com.example.wordledex.database.PlayerData
 import com.example.wordledex.database.Pokemon
 import com.example.wordledex.game.GameActivity
@@ -48,6 +44,10 @@ class MainActivity : AppCompatActivity() {
             launchPokedexActivity()
         }
 
+        buttonAchievements.setOnClickListener {
+            launchAchievementsActivity(presenter.playerData!!)
+        }
+
         toggleInterface(false)
     }
 
@@ -60,7 +60,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     //Toggles the main menu and loading screen visibility
-    fun toggleInterface(enabled: Boolean){
+    private fun toggleInterface(enabled: Boolean){
         if (enabled){
             imageViewLogoProgress.visibility = GONE
             progressBar.visibility = GONE
@@ -73,6 +73,7 @@ class MainActivity : AppCompatActivity() {
             imageViewLogoProgress.visibility = VISIBLE
             progressBar.visibility = VISIBLE
             textViewProgress.visibility = VISIBLE
+            textViewProgress.text = "Loading..."
             imageViewLogo.visibility = GONE
             playButton.visibility = GONE
             buttonAchievements.visibility = GONE
@@ -98,10 +99,24 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
+    //Launches the achievements activity
+    private fun launchAchievementsActivity(playerData: PlayerData){
+        val intent = Intent(this, AchievementsActivity::class.java).also {
+            it.putExtra(PLAYER_DATA, playerData)
+        }
+        startActivity(intent)
+    }
+
     //Launches the pokedex activity
-    fun launchPokedexActivity(){
+    private fun launchPokedexActivity(){
         val intent = Intent(this, PokedexActivity::class.java)
         startActivity(intent)
+    }
+
+    //Displays possible errors
+    fun toast(text: String){
+        val toast = Toast.makeText(applicationContext, text, Toast.LENGTH_LONG)
+        toast.show()
     }
 
     companion object{

@@ -5,8 +5,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import com.example.wordledex.R
 import com.example.wordledex.database.Pokemon
+import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 
 class PokedexEntryActivity : AppCompatActivity() {
@@ -46,8 +48,20 @@ class PokedexEntryActivity : AppCompatActivity() {
     }
 
     fun setDexEntryData(){
-        Picasso.get().load(pokemon.artNormalURL).into(image)
-        Picasso.get().load(pokemon.artShinyURL).into(imageShiny)
+        Picasso.get().load(pokemon.artNormalURL).into(image, object: Callback {
+            override fun onSuccess() {}
+            override fun onError(e: Exception?) {
+                image.setImageResource(R.drawable.missing)
+                toast("Error: couldn't download pokémon image from the internet. Check your connection.")
+            }
+        })
+        Picasso.get().load(pokemon.artShinyURL).into(imageShiny, object: Callback {
+            override fun onSuccess() {}
+            override fun onError(e: Exception?) {
+                imageShiny.setImageResource(R.drawable.missing)
+                toast("Error: couldn't download pokémon image from the internet. Check your connection.")
+            }
+        })
         if (pokemon.shinyCaught) imageShiny.setColorFilter(Color.parseColor("#00000000"))
         type1.setImageResource(getTypeImageId(pokemon.primaryType!!))
         type2.setImageResource(getTypeImageId(pokemon.secondaryType!!))
@@ -68,7 +82,7 @@ class PokedexEntryActivity : AppCompatActivity() {
         }
     }
 
-    fun getTypeImageId(pokemonType: String): Int {
+    private fun getTypeImageId(pokemonType: String): Int {
         return when (pokemonType) {
             "BUG" -> R.drawable.bug
             "DARK" -> R.drawable.dark
@@ -90,5 +104,10 @@ class PokedexEntryActivity : AppCompatActivity() {
             "WATER" -> R.drawable.water
             else -> R.drawable.none
         }
+    }
+
+    fun toast(text: String){
+        val toast = Toast.makeText(applicationContext, text, Toast.LENGTH_LONG)
+        toast.show()
     }
 }

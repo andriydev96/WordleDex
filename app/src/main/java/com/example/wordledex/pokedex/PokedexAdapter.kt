@@ -9,7 +9,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.wordledex.R
 import com.example.wordledex.database.Pokemon
+import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
+import java.lang.Exception
 
 class PokedexAdapter(val ownedPokemonList : ArrayList<Pokemon>):RecyclerView.Adapter<PokedexAdapter.PokedexHolder>(){
 
@@ -39,7 +41,12 @@ class PokedexAdapter(val ownedPokemonList : ArrayList<Pokemon>):RecyclerView.Ada
             val numberTextView = view.findViewById<TextView>(R.id.textViewDex)
             numberTextView.text = "#${pokemon.dex.toString().padStart(3, '0')}"
             if (pokemon.shinyCaught) numberTextView.setTextColor(Color.parseColor("#FFD700"))
-            Picasso.get().load(pokemon.spriteNormalURL).into(view.findViewById<ImageView>(R.id.imageViewDex))
+            Picasso.get().load(pokemon.spriteNormalURL).into(view.findViewById<ImageView>(R.id.imageViewDex), object: Callback {
+                override fun onSuccess() {}
+                override fun onError(e: Exception?) {
+                    view.findViewById<ImageView>(R.id.imageViewDex).setImageResource(R.drawable.missing)
+                }
+            })
         }
         init {
             view.setOnClickListener {

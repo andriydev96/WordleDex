@@ -18,6 +18,7 @@
         android:layout_marginTop="1dp"
         android:text="EXPLORE"
         android:textAlignment="gravity"
+        app:cornerRadius="35dp"
         app:icon="@drawable/icon_explore"
         app:iconGravity="end"
         app:iconPadding="15dp"
@@ -41,6 +42,7 @@
         android:paddingBottom="10dp"
         android:text="POKÉDEX"
         android:textAlignment="gravity"
+        app:cornerRadius="35dp"
         app:icon="@drawable/icon_collection"
         app:iconGravity="end"
         app:iconPadding="15dp"
@@ -62,6 +64,7 @@
         android:paddingBottom="10dp"
         android:text="ACHIEVEMENTS"
         android:textAlignment="gravity"
+        app:cornerRadius="35dp"
         app:icon="@drawable/icon_achievements"
         app:iconGravity="end"
         app:iconPadding="15dp"
@@ -106,42 +109,42 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.4" />
+        app:layout_constraintGuide_percent="0.38" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline26"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.55" />
+        app:layout_constraintGuide_percent="0.53" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline27"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.6" />
+        app:layout_constraintGuide_percent="0.58" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline29"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.75" />
+        app:layout_constraintGuide_percent="0.73" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline28"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.8" />
+        app:layout_constraintGuide_percent="0.78" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline30"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.95" />
+        app:layout_constraintGuide_percent="0.93" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline31"
@@ -168,8 +171,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0"
-        tools:visibility="gone">
+        app:layout_constraintVertical_bias="1.0">
 
         <ProgressBar
             android:id="@+id/progressBar"
@@ -191,15 +193,20 @@
 
         <TextView
             android:id="@+id/textViewProgress"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
             android:fontFamily="@font/hannover_messe_sans"
+            android:gravity="center"
             android:text="Loading game data..."
             android:textColor="#FFFFFF"
             android:textSize="20dp"
-            app:layout_constraintEnd_toEndOf="@+id/progressBar"
-            app:layout_constraintStart_toStartOf="@+id/progressBar"
-            app:layout_constraintTop_toBottomOf="@+id/progressBar" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/progressBar"
+            app:layout_constraintVertical_bias="0.0" />
 
         <ImageView
             android:id="@+id/imageViewLogoProgress"

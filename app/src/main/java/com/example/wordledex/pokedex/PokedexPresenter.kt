@@ -10,7 +10,8 @@ class PokedexPresenter(private val view: PokedexActivity, val model: PokedexMode
 
     var ownedPokemonList =  ArrayList<Pokemon>()
 
-    fun loadOwnedPokemonData(loadedData : ArrayList<Pokemon>){
+    //Loads the list of pokémon that the player has caught from the database and passes it to the RecyclerView
+    private fun loadOwnedPokemonData(loadedData : ArrayList<Pokemon>){
         ownedPokemonList = loadedData
         if (ownedPokemonList.isNotEmpty()) {
             view.displayPokedexEntries(ownedPokemonList)

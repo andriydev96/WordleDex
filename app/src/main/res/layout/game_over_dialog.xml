@@ -70,11 +70,11 @@
 
     <TextView
         android:id="@+id/textViewDescriptionGO"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="16dp"
         android:fontFamily="@font/hannover_messe_sans"
         android:foregroundGravity="center"
         android:gravity="center"

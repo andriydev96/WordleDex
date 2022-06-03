@@ -22,6 +22,7 @@ class PokedexActivity : AppCompatActivity() {
         recyclerView = findViewById(R.id.recyclerViewPokedex)
     }
 
+    //RecyclerView function
     fun displayPokedexEntries(ownedPokemonList : ArrayList<Pokemon>){
         if (recyclerView.adapter == null) {
             recyclerView.also {
@@ -38,7 +39,7 @@ class PokedexActivity : AppCompatActivity() {
             recyclerView.adapter?.notifyDataSetChanged()
     }
 
-    //Launches the elected pokédex entry activity
+    //Launches the selected pokédex entry activity
     fun launchDexEntryActivity(pokemon: Pokemon){
         val intent = Intent(this, PokedexEntryActivity::class.java).also {
             it.putExtra(POKEMON_DATA, pokemon)

@@ -38,11 +38,35 @@ class Network private constructor(context: Context) {
                     val pokemon = Pokemon()
                     pokemon.dex = number
                     pokemon.name = response.getString("name").toUpperCase(Locale.ROOT)
-                    if (pokemon.name == "MINIOR-RED-METEOR") pokemon.name = "MINIOR"
-                    else if (pokemon.name == "WORMADAM-PLANT") pokemon.name = "WORMADAM"
-                    else if (pokemon.name == "LYCANROC-MIDDAY") pokemon.name = "LYCANROC"
-                    else if (pokemon.name == "GIRATINA-ALTERED") pokemon.name = "GIRATINA"
-                    else if (pokemon.name == "MORPEKO-FULL-BELLY") pokemon.name = "MORPEKO"
+                    //Some name strings are not appropiate for the game, so we have to fix them...
+                    when (pokemon.name) {
+                        "MINIOR-RED-METEOR" -> pokemon.name = "MINIOR"
+                        "WORMADAM-PLANT" -> pokemon.name = "WORMADAM"
+                        "LYCANROC-MIDDAY" -> pokemon.name = "LYCANROC"
+                        "GIRATINA-ALTERED" -> pokemon.name = "GIRATINA"
+                        "MORPEKO-FULL-BELLY" -> pokemon.name = "MORPEKO"
+                        "URSHIFU-SINGLE-STRIKE" -> pokemon.name = "URSHIFU"
+                        "INDEEDEE-MALE" -> pokemon.name = "INDEEDEE"
+                        "TOXTRICITY-AMPED" -> pokemon.name = "TOXTRICITY"
+                        "MIMIKYU-DISGUISED" -> pokemon.name = "MIMIKYU"
+                        "GOURGEIST-AVERAGE" -> pokemon.name = "GOURGEIST"
+                        "PUMPKABOO-AVERAGE" -> pokemon.name = "PUMPKABOO"
+                        "ORICORIO-BAILE" -> pokemon.name = "ORICORIO"
+                        "WISHIWASHI-SOLO" -> pokemon.name = "WISHIWASHI"
+                        "AEGISLASH-SHIELD" -> pokemon.name = "AEGISLASH"
+                        "MEOWSTIC-MALE" -> pokemon.name = "MEOWSTIC"
+                        "THUNDURUS-INCARNATE" -> pokemon.name = "THUNDURUS"
+                        "TORNADUS-INCARNATE" -> pokemon.name = "TORNADUS"
+                        "LANDORUS-INCARNATE" -> pokemon.name = "LANDORUS"
+                        "KELDEO-ORDINARY" -> pokemon.name = "KELDEO"
+                        "MELOETTA-ARIA" -> pokemon.name = "MELOETTA"
+                        "DARMANITAN-STANDARD" -> pokemon.name = "DARMANITAN"
+                        "SHAYMIN-LAND" -> pokemon.name = "SHAYMIN"
+                        "DEOXYS-NORMAL" -> pokemon.name = "DEOXYS"
+                        "BASCULIN-RED-STRIPED" -> pokemon.name = "BASCULIN"
+                        "ZYGARDE-50" -> pokemon.name = "ZYGARDE"
+                    }
+
                     pokemon.height = response.getString("height").toFloat() / 10F
                     pokemon.weight = response.getString("weight").toFloat() / 10F
 
@@ -99,103 +123,4 @@ class Network private constructor(context: Context) {
         )
         queue.add(request)
     }
-
-    /*
-    //Downloads the normal sprite of a given pokémon as a bitmap
-    fun getPokemonNormalSprite(listener: Response.Listener<Pokemon>, errorListener: Response.ErrorListener, pokemon: Pokemon){
-        val request = ImageRequest(
-                pokemon.spriteNormalURL,
-                {
-                    pokemon.spriteNormal = it
-                    listener.onResponse(pokemon)
-                },
-                0,
-                0,
-                ImageView.ScaleType.CENTER,
-                Bitmap.Config.ARGB_8888,
-                {
-                    errorListener.onErrorResponse(VolleyError("Error: Couldn't download ${pokemon.dex}'s normal sprite."))
-                }
-        )
-        queue.add(request)
-    }
-
-    //Downloads the shiny sprite of a given pokémon as a bitmap
-    fun getPokemonShinySprite(listener: Response.Listener<Pokemon>, errorListener: Response.ErrorListener, pokemon: Pokemon){
-        val request = ImageRequest(
-                pokemon.spriteShinyURL,
-                {
-                    pokemon.spriteShiny = it
-                    listener.onResponse(pokemon)
-                },
-                0,
-                0,
-                ImageView.ScaleType.CENTER,
-                Bitmap.Config.ARGB_8888,
-                {
-                    errorListener.onErrorResponse(VolleyError("Error: Couldn't download ${pokemon.dex}'s shiny sprite."))
-                }
-        )
-        queue.add(request)
-    }
-
-    //Downloads the normal art of a given pokémon as a bitmap
-    fun getPokemonNormalArt(listener: Response.Listener<Pokemon>, errorListener: Response.ErrorListener, pokemon: Pokemon){
-        if (pokemon.artNormalURL == "null") pokemon.artNormalURL = pokemon.spriteNormalURL
-        val request = ImageRequest(
-                pokemon.artNormalURL,
-                {
-                    pokemon.artNormal = it
-                    listener.onResponse(pokemon)
-                },
-                0,
-                0,
-                ImageView.ScaleType.CENTER,
-                Bitmap.Config.ARGB_8888,
-                {
-                    errorListener.onErrorResponse(VolleyError("Error: Couldn't download ${pokemon.dex}'s normal art."))
-                }
-        )
-        queue.add(request)
-    }
-
-    //Downloads the shiny art of a given pokémon as a bitmap
-    fun getPokemonShinyArt(listener: Response.Listener<Pokemon>, errorListener: Response.ErrorListener, pokemon: Pokemon){
-        if (pokemon.artShinyURL == "null") pokemon.artShinyURL = pokemon.spriteShinyURL
-        val request = ImageRequest(
-                pokemon.artShinyURL,
-                {
-                    pokemon.artShiny = it
-                    listener.onResponse(pokemon)
-                },
-                0,
-                0,
-                ImageView.ScaleType.CENTER,
-                Bitmap.Config.ARGB_8888,
-                {
-                    errorListener.onErrorResponse(VolleyError("Error: Couldn't download ${pokemon.dex}'s shiny art."))
-                }
-        )
-        queue.add(request)
-    }
-
-    //Downloads the icon sprite of a given pokémon as a bitmap
-    fun getPokemonIconSprite(listener: Response.Listener<Pokemon>, errorListener: Response.ErrorListener, pokemon: Pokemon){
-        val request = ImageRequest(
-                pokemon.iconURL,
-                {
-                    pokemon.icon = it
-                    listener.onResponse(pokemon)
-                },
-                0,
-                0,
-                ImageView.ScaleType.CENTER,
-                Bitmap.Config.ARGB_8888,
-                {
-                    errorListener.onErrorResponse(VolleyError("Error: Couldn't download ${pokemon.dex}'s icon sprite."))
-                }
-        )
-        queue.add(request)
-    }
-    */
 }

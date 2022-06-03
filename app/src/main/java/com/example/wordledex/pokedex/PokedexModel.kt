@@ -13,6 +13,7 @@ import kotlinx.coroutines.withContext
 class PokedexModel(context: Context) {
     private val database = WordleDexDatabase.getInstance(context).database
 
+    //Loads the list of pokémon that the player has caught from the database
     fun loadOwnedPokemonData(listener: Response.Listener<ArrayList<Pokemon>>, errorListener: Response.ErrorListener) {
         GlobalScope.launch(Dispatchers.Main) {
             val pokemonList = withContext(Dispatchers.IO){

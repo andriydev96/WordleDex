@@ -1,18 +1,19 @@
 package com.example.wordledex.game
 
+import android.content.pm.ActivityInfo
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.SpannableString
 import android.util.Log
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.ProgressBar
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import com.example.wordledex.R
 import com.example.wordledex.database.PlayerData
 import com.example.wordledex.database.Pokemon
+import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
+import java.lang.Exception
 
 class GameActivity : AppCompatActivity() {
     lateinit var pokemon: Pokemon
@@ -61,6 +62,7 @@ class GameActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game_activitty)
         supportActionBar!!.hide()
+        this.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
         pokemon = intent.getParcelableExtra<Pokemon>(POKEMON_DATA)!!
         playerData = intent.getParcelableExtra<PlayerData>(PLAYER_DATA)!!
@@ -140,14 +142,30 @@ class GameActivity : AppCompatActivity() {
         Log.d("APP-ACTION", "$pokemon")
     }
 
-    fun loadPokemonImage(view: ImageView){
+    //Loads and displays the corresponding pokémon image
+    private fun loadPokemonImage(view: ImageView){
         if (!isShiny){
-            Picasso.get().load(pokemon.artNormalURL).into(view)
+            Picasso.get().load(pokemon.artNormalURL).into(view, object: Callback{
+                override fun onSuccess() {}
+                override fun onError(e: Exception?) {
+                    view.setImageResource(R.drawable.missing)
+                    view.setColorFilter(Color.parseColor("#00000000"))
+                    toast("Error: couldn't download pokémon image from the internet. Check your connection.")
+                }
+            })
         } else {
-            Picasso.get().load(pokemon.artShinyURL).into(view)
+            Picasso.get().load(pokemon.artShinyURL).into(view, object: Callback{
+                override fun onSuccess() {}
+                override fun onError(e: Exception?) {
+                    view.setImageResource(R.drawable.missing)
+                    view.setColorFilter(Color.parseColor("#00000000"))
+                    toast("Error: couldn't download pokémon image from the internet. Check your connection.")
+                }
+            })
         }
     }
 
+    //Clears guess text
     fun clearButtonText(){
         var text = ""
         for (i in 1..pokemon.name!!.length){
@@ -156,29 +174,46 @@ class GameActivity : AppCompatActivity() {
         buttonGuess.text = text
     }
 
+    //Sets a given guess text
     fun setButtonText(text : String){
         buttonGuess.text = text
     }
 
+    //Sets the hint text of the last incorrect guess
     fun setWhoText(text : SpannableString){
         textWho.text = text
     }
 
+    //Updates the life bar
     fun setLife(life : Int){
         lifeBar.progress = life
     }
 
+    //Reveals the generation hint
     fun setGeneration(genString : String){
         textViewGeneration.text = genString
     }
 
+    //Launches the game over activity when the pokémon escapes or is caught
     fun gameOver(life : Int, pokemon: Pokemon){
         val builder = AlertDialog.Builder(this)
         val view = layoutInflater.inflate(R.layout.game_over_dialog, null)
         if (!isShiny)
-            Picasso.get().load(pokemon.artNormalURL).into(view.findViewById<ImageView>(R.id.imageViewGO))
+            Picasso.get().load(pokemon.artNormalURL).into(view.findViewById<ImageView>(R.id.imageViewGO), object: Callback{
+                override fun onSuccess() {}
+                override fun onError(e: Exception?) {
+                    view.findViewById<ImageView>(R.id.imageViewGO).setImageResource(R.drawable.missing)
+                    toast("Error: couldn't download pokémon image from the internet. Check your connection.")
+                }
+            })
         else {
-            Picasso.get().load(pokemon.artShinyURL).into(view.findViewById<ImageView>(R.id.imageViewGO))
+            Picasso.get().load(pokemon.artShinyURL).into(view.findViewById<ImageView>(R.id.imageViewGO), object: Callback{
+                override fun onSuccess() {}
+                override fun onError(e: Exception?) {
+                    view.findViewById<ImageView>(R.id.imageViewGO).setImageResource(R.drawable.missing)
+                    toast("Error: couldn't download pokémon image from the internet. Check your connection.")
+                }
+            })
             view.findViewById<ImageView>(R.id.imageViewBackgroundGO).setImageResource(R.drawable.light_effect_shiny)
         }
 
@@ -202,6 +237,12 @@ class GameActivity : AppCompatActivity() {
         val dialog = builder.create()
         view.findViewById<Button>(R.id.buttonGO).setOnClickListener { dialog.dismiss() }
         dialog.show()
+    }
+
+    //Shows possible error messages to the usuer
+    fun toast(text: String){
+        val toast = Toast.makeText(applicationContext, text, Toast.LENGTH_LONG)
+        toast.show()
     }
 
     companion object{

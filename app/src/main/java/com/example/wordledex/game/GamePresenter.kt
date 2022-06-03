@@ -1,10 +1,7 @@
 package com.example.wordledex.game
 
 import android.graphics.Color
-import android.text.Spannable
-import android.text.style.BackgroundColorSpan
 import android.util.Log
-import android.view.View
 import android.widget.ImageView
 import androidx.core.graphics.drawable.DrawableCompat
 import com.example.wordledex.R
@@ -14,6 +11,7 @@ import kotlin.random.Random.Default.nextInt
 class GamePresenter(private val view: GameActivity, val model: GameModel) {
     var updatedKeys = ""
 
+    //Updates the guess as a button is pressed
     fun keyPressed(key : String, pokemon: Pokemon){
         model.updateGuessString(key, pokemon)
 
@@ -27,6 +25,7 @@ class GamePresenter(private val view: GameActivity, val model: GameModel) {
         view.setButtonText(guess)
     }
 
+    //Manages a guess when it's made
     fun guessButtonPressed(pokemon: Pokemon){
         if (model.currentGuess == pokemon.name){
             view.playerData.gamesPlayed += 1
@@ -72,7 +71,8 @@ class GamePresenter(private val view: GameActivity, val model: GameModel) {
         }
     }
 
-    fun toggleGuessButton(enabled : Boolean){
+    //Enables or disables the guess button
+    private fun toggleGuessButton(enabled : Boolean){
         view.buttonGuess.isClickable = enabled
         if (enabled) {
             var buttonDrawable = view.buttonGuess.background
@@ -87,7 +87,8 @@ class GamePresenter(private val view: GameActivity, val model: GameModel) {
         }
     }
 
-    fun showHint(pokemon: Pokemon){
+    //Displays hints as the player loses life points
+    private fun showHint(pokemon: Pokemon){
         when (model.life){
             4 -> showType(view.imageViewType1, pokemon.primaryType.toString())
             3 -> showType(view.imageViewType2, pokemon.secondaryType.toString())
@@ -96,7 +97,8 @@ class GamePresenter(private val view: GameActivity, val model: GameModel) {
         }
     }
 
-    fun showType(typePlate : ImageView, pokemonType: String){
+    //Sets the corresponding type image as a hint
+    private fun showType(typePlate : ImageView, pokemonType: String){
         when (pokemonType) {
             "BUG" -> typePlate.setImageResource(R.drawable.bug)
             "DARK" -> typePlate.setImageResource(R.drawable.dark)
@@ -120,7 +122,8 @@ class GamePresenter(private val view: GameActivity, val model: GameModel) {
         }
     }
 
-    fun updateKeyBoard(pokemon: Pokemon){
+    //Colors or disables the keys that have been pressed in the last guess
+    private fun updateKeyBoard(pokemon: Pokemon){
         for (i in 1..model.currentGuess.length){
             if (model.currentGuess.substring(i - 1, i) == pokemon.name!!.substring(i - 1, i) && !updatedKeys.contains(model.currentGuess.substring(i - 1, i))){
                 updateKey(model.currentGuess.substring(i - 1, i), Color.parseColor("#FF409A2F"))
@@ -133,6 +136,7 @@ class GamePresenter(private val view: GameActivity, val model: GameModel) {
         }
     }
 
+    //Companion function to updateKeyBoard()
     private fun updateKey(key : String, color: Int){
         val keyView = when (key){
             "A" -> view.buttonA

@@ -10,11 +10,7 @@ import kotlinx.coroutines.withContext
 import kotlin.math.floor
 import kotlin.random.Random
 
-class MainPresenter(val view: MainActivity, val model: MainModel) {
-    init {
-        loadGameData()
-    }
-
+class MainPresenter(private val view: MainActivity, private val model: MainModel) {
     var pokemonList = ArrayList<Pokemon>()
     var missingPokemonList =  ArrayList<Pokemon>()
     var playerData : PlayerData? = null
@@ -25,10 +21,10 @@ class MainPresenter(val view: MainActivity, val model: MainModel) {
             withContext(Dispatchers.IO){
                 model.loadPokemonData({
                     loadPokemonData(it)
-                    if (it.isNotEmpty()) view.updateProgressScreen("Loading...", 898)}, {})
+                    if (it.isNotEmpty()) view.updateProgressScreen("Loading...", 898)}, {view.toast("Error: couldn't load pokémon list from local DB.")})
                 model.loadMissingPokemonData({
                     loadMissingPokemonData(it)
-                    if (it.isNotEmpty()) view.updateProgressScreen("Loading...", 898)},{})
+                    if (it.isNotEmpty()) view.updateProgressScreen("Loading...", 898)},{view.toast("Error: couldn't load pokémon list from local DB.")})
                 model.loadPlayerData({ loadPlayerData(it) },{loadPlayerData(playerData)})
             }
         }
@@ -41,19 +37,20 @@ class MainPresenter(val view: MainActivity, val model: MainModel) {
             model.getPokemon({
                 addPokemonToList(it)
                 view.updateProgressScreen("Downloading pokémon data ${floor((i/2).toDouble()).toInt()}/898", 1)},
-                {Log.d("ERROR POKEMON", "$i")}, i)
+                {view.textViewProgress.text = "ERROR: couldn't download pokémon data from the internet. Please, check your connection and restart the app."}, i)
     }
 
     //Gets the remaining info of each pokémon
-    fun getPokemonSpeciesInfo(){
+    private fun getPokemonSpeciesInfo(){
         for (i in 1..898)
             model.getPokemonSpecies({
                 updatePokemonSpeciesData(it)
                 view.updateProgressScreen("Downloading pokémon data ${898/2 + floor((i/2).toDouble()).toInt()}/898", 1) },
-                {Log.d("ERROR SPECIES INFO", "$i")}, pokemonList[i-1])
+                {view.textViewProgress.text = "ERROR: couldn't download pokémon data from the internet. Please, check your connection and restart the app."}, pokemonList[i-1])
     }
 
-    fun loadPokemonData(loadedData : ArrayList<Pokemon>){
+    //If not empty, stores the loaded pokémon list in the variable. Else, downloads it.
+    private fun loadPokemonData(loadedData : ArrayList<Pokemon>){
         pokemonList = loadedData
         if (pokemonList.isNotEmpty() && pokemonList.size == 898) {
             Log.d("APP-ACTION", "Successfully got pokémon list from local database. $pokemonList")
@@ -63,7 +60,8 @@ class MainPresenter(val view: MainActivity, val model: MainModel) {
         }
     }
 
-    fun loadMissingPokemonData(loadedData : ArrayList<Pokemon>){
+    //Stores the list of the pokémon that the player is missing.
+    private fun loadMissingPokemonData(loadedData : ArrayList<Pokemon>){
         missingPokemonList = loadedData
         if (missingPokemonList.isNotEmpty()) {
             Log.d("APP-ACTION", "Successfully got missing pokémon list from local database. $missingPokemonList")
@@ -72,7 +70,8 @@ class MainPresenter(val view: MainActivity, val model: MainModel) {
         }
     }
 
-    fun loadPlayerData(loadedData : PlayerData?){
+    //Stores the loaded player data. If no data was stored, initializes player data and saves it.
+    private fun loadPlayerData(loadedData : PlayerData?){
         playerData = loadedData
         if (playerData != null) {
             Log.d("APP-ACTION", "Successfully got player data from local database. $playerData")
@@ -84,7 +83,7 @@ class MainPresenter(val view: MainActivity, val model: MainModel) {
     }
 
     //Adds the pokémon to the pokemonList
-    fun addPokemonToList(pokemon: Pokemon) {
+    private fun addPokemonToList(pokemon: Pokemon) {
         pokemonList.add(pokemon)
         if (pokemonList.size == 898) {
             pokemonList.sortBy { it.dex }
@@ -93,7 +92,7 @@ class MainPresenter(val view: MainActivity, val model: MainModel) {
     }
 
     //Updates the corresponding Pokemon object of the pokemonList with its description and capture rate
-    fun updatePokemonSpeciesData(pokemon: Pokemon) {
+    private fun updatePokemonSpeciesData(pokemon: Pokemon) {
         pokemonList[pokemon.dex-1] = pokemon
         if (pokemon.dex == 898)
             model.savePokemonData(pokemonList)
